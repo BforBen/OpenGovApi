@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Arvo' rel='stylesheet' type='text/css'>
+    <style>
+        body {
+            font-family: Arvo,sans-serif;
+        }
+    </style>
+    @RenderSection("scripts", required: false)
+</head>
+<body>
+    <header>
+        <div class="jumbotron">
+            <div class="container">
+                <h1>@OpenGovApi.About.Name v@(OpenGovApi.About.Version)</h1>
+                <p>More information can be found <a href="https://ben.cheetham.me.uk/blog/2014/06/a-shared-web-platform-for-local-government/">in a blog post here</a>.</p>
+            </div>
+        </div>
+    </header>
+@RenderBody()
+</body>
+</html>

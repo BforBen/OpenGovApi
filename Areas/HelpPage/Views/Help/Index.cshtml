@@ -1,0 +1,25 @@
+@using System.Web.Http
+@using System.Web.Http.Controllers
+@using System.Web.Http.Description
+@using System.Collections.ObjectModel
+@using OpenGovApi.Areas.HelpPage.Models
+@model Collection<ApiDescription>
+
+@{
+    ViewBag.Title = OpenGovApi.About.Name + " v" + OpenGovApi.About.Version;
+
+    // Group APIs by controller
+    ILookup<HttpControllerDescriptor, ApiDescription> apiGroups = Model.ToLookup(api => api.ActionDescriptor.ControllerDescriptor);
+}
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <section>
+                @foreach (var group in apiGroups)
+                {
+                    @Html.DisplayFor(m => group, "ApiGroup")
+                }
+            </section>
+        </div>
+    </div>
+</div>

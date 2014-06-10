@@ -1,0 +1,20 @@
+@using System.Web.Http
+@using OpenGovApi.Areas.HelpPage.Models
+@model HelpPageApiModel
+
+@{
+    var description = Model.ApiDescription;
+    ViewBag.Title = description.HttpMethod.Method + " " + description.RelativePath;
+}
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <header class="page-header">
+                <h1>@ViewBag.Title</h1>
+            </header>
+            <section>
+                @Html.DisplayFor(m => Model)
+            </section>
+        </div>
+    </div>
+</div>
