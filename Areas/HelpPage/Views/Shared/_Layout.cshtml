@@ -19,11 +19,18 @@
     <header>
         <div class="jumbotron">
             <div class="container">
-                <h1>@OpenGovApi.About.Name v@(OpenGovApi.About.Version) <small><span class="label label-info">Pre-Alpha</span></small></h1>
+                <h1>@OpenGovApi.About.Name v@(OpenGovApi.About.Version) <small><span class="label label-info">Preview</span></small></h1>
                 <p>More information can be found <a href="https://ben.cheetham.me.uk/blog/2014/06/a-shared-web-platform-for-local-government/">in a blog post here</a>.</p>
             </div>
         </div>
     </header>
+    <section>
+        <div class="container">
+            <div class="col-xs-12">
+                <p class="text-right"><small>Last updated: @OpenGovApi.About.BuildDateAsString</small></p>
+            </div>
+        </div>
+    </section>
 @RenderBody()
 </body>
 </html>
