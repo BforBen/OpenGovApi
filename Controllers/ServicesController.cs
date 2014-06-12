@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using OpenGovApi.Models;
+using System.ServiceModel.Syndication;
 
 namespace OpenGovApi.Controllers
 {
@@ -18,10 +19,58 @@ namespace OpenGovApi.Controllers
     {
         private OpenGovContext db = new OpenGovContext();
 
+        /// <summary>
+        /// An Atom feed listing services the organisation offers.
+        /// </summary>
+        /// <returns>An Atom feed.</returns>
         [Route]
-        public IQueryable<Service> GetServices()
+        [ResponseType(typeof(Atom10FeedFormatter))]
+        public async Task<IHttpActionResult> GetServices()
         {
-            return db.Services;
+            var Services = await db.Services.ToListAsync();
+
+            var ServiceItemList = new List<SyndicationItem>();
+            Services.ForEach(i =>
+                {
+                    var Entry = new SyndicationItem();
+                    Entry.Id = i.Id;
+
+                    Entry.Authors.Add(new SyndicationPerson(null, "Cleansing Services", "http://www.surreyhills.gov.uk/cleansing"));
+                    Entry.Categories.Add(new SyndicationCategory(i.ServiceCategoryId.ToString(), null, i.Category.Name));
+                    Entry.Content = SyndicationContent.CreatePlaintextContent(i.Content);
+                    Entry.LastUpdatedTime = i.Updated;
+                    Entry.Summary = new TextSyndicationContent(i.Summary);
+                    Entry.Title = new TextSyndicationContent(i.Title);                    
+
+                    var Link = new SyndicationLink();
+                    Link.RelationshipType = "self";
+                    Link.Uri = new Uri(Url.Content("~/Service/" + i.Id));
+                    Link.MediaType = "application/atom+xml";
+                    Entry.Links.Add(Link);
+
+                    ServiceItemList.Add(Entry);
+                });
+
+            var ServiceFeed = new SyndicationFeed();
+            ServiceFeed.Items = ServiceItemList;
+            ServiceFeed.Id = "43UZ";
+            ServiceFeed.LastUpdatedTime = ServiceItemList.Max(i => i.LastUpdatedTime);
+            ServiceFeed.Title = new TextSyndicationContent("Surrey Hills District Council Service List");
+            ServiceFeed.Description = new TextSyndicationContent("Service list for Surrey Hills District Council");
+            ServiceFeed.Authors.Add(new SyndicationPerson(null, "Surrey Hills District Council", "http://www.surreyhills.gov.uk/"));
+
+            //foreach (var c in ServiceItemList.SelectMany(i => i.Categories).Distinct())
+            //{
+            //    ServiceFeed.Categories.Add(c);
+            //}
+
+            var SelfLink = new SyndicationLink();
+            SelfLink.RelationshipType = "self";
+            SelfLink.Uri = new Uri(Url.Content("~/Services"));
+            SelfLink.MediaType = "application/atom+xml";
+            ServiceFeed.Links.Add(SelfLink);
+
+            return Ok(ServiceFeed.GetAtom10Formatter());
         }
 
         protected override void Dispose(bool disposing)
@@ -31,11 +80,6 @@ namespace OpenGovApi.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
-        }
-
-        private bool ServiceExists(int id)
-        {
-            return db.Services.Count(e => e.Id == id) > 0;
         }
     }
 }

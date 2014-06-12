@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using OpenGovApi.Models;
+using System.ServiceModel.Syndication;
 
 namespace OpenGovApi.Controllers
 {
@@ -20,8 +21,8 @@ namespace OpenGovApi.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        [ResponseType(typeof(Service))]
-        public async Task<IHttpActionResult> GetService(int id)
+        [ResponseType(typeof(Atom10FeedFormatter))]
+        public async Task<IHttpActionResult> GetService(string id)
         {
             Service service = await db.Services.FindAsync(id);
             if (service == null)
@@ -29,13 +30,27 @@ namespace OpenGovApi.Controllers
                 return NotFound();
             }
 
-            return Ok(service);
+            var ServiceFeed = new SyndicationFeed();
+            ServiceFeed.Id = service.Id;
+            ServiceFeed.LastUpdatedTime = service.Updated;
+            ServiceFeed.Title = new TextSyndicationContent(service.Title);
+            ServiceFeed.Description = new TextSyndicationContent(service.Summary);
+
+            ServiceFeed.Categories.Add(new SyndicationCategory(service.ServiceCategoryId.ToString(), null, service.Category.Name));
+
+            var SelfLink = new SyndicationLink();
+            SelfLink.RelationshipType = "self";
+            SelfLink.Uri = new Uri(Url.Content("~/Service/" + service.Id));
+            SelfLink.MediaType = "application/atom+xml";
+            ServiceFeed.Links.Add(SelfLink);
+
+            return Ok(ServiceFeed.GetAtom10Formatter());
         }
 
         [HttpPost]
         [Route("{id}")]
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutService(int id, Service service)
+        public async Task<IHttpActionResult> PutService(string id, Service service)
         {
             if (!ModelState.IsValid)
             {
@@ -92,7 +107,7 @@ namespace OpenGovApi.Controllers
             base.Dispose(disposing);
         }
 
-        private bool ServiceExists(int id)
+        private bool ServiceExists(string id)
         {
             return db.Services.Count(e => e.Id == id) > 0;
         }

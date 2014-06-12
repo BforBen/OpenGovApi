@@ -51,12 +51,15 @@ namespace OpenGovApi.Models
 
     public class Service
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string Keywords { get; set; }
-        public string Group { get; set; }
-        public int Order { get; set; }
+        [Key]
+        public string Id { get; set; }
+        public int ServiceCategoryId { get; set; }
+        public string Title { get; set; }
+        public string Summary { get; set; }
+        public string Content { get; set; }
+        public DateTime Updated { get; set; }
+
+        public virtual ServiceCategory Category { get; set; }
     }
 
     public class ServiceAttribute
@@ -87,6 +90,14 @@ namespace OpenGovApi.Models
         public int ServiceAttributeId { get; set; }
     }
 
+    public class ServiceCategory
+    {
+        [Key]
+        [DatabaseGenerated(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.None)]
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
     public class OpenGovContext : DbContext
     {
         public OpenGovContext()
@@ -103,5 +114,7 @@ namespace OpenGovApi.Models
         public DbSet<ServiceAttribute> ServiceAttributes { get; set; }
         public DbSet<ServiceAttributeAttribute> ServiceAttributeAttributes { get; set; }
         public DbSet<ServiceAttributeValue> ServiceAttributeValues { get; set; }
+
+        public DbSet<ServiceCategory> ServiceCategories { get; set; }
     }
 }

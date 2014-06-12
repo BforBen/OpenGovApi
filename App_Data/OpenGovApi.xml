@@ -493,6 +493,12 @@
             <param name="id">Person ID</param>
             <returns></returns>
         </member>
+        <member name="M:OpenGovApi.Controllers.ServicesController.GetServices">
+            <summary>
+            An Atom feed listing services the organisation offers.
+            </summary>
+            <returns>An Atom feed.</returns>
+        </member>
         <member name="P:OpenGovApi.Models.ObjectWithAttributes.Attributes">
             <summary>
             A collection of key-value pairs to make the object extensible
