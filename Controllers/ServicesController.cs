@@ -42,11 +42,17 @@ namespace OpenGovApi.Controllers
                     Entry.Summary = new TextSyndicationContent(i.Summary);
                     Entry.Title = new TextSyndicationContent(i.Title);                    
 
-                    var Link = new SyndicationLink();
-                    Link.RelationshipType = "self";
-                    Link.Uri = new Uri(Url.Content("~/Service/" + i.Id));
-                    Link.MediaType = "application/atom+xml";
-                    Entry.Links.Add(Link);
+                    var AtomLink = new SyndicationLink();
+                    AtomLink.RelationshipType = "self";
+                    AtomLink.Uri = new Uri(Url.Content("~/Service/" + i.Id));
+                    AtomLink.MediaType = "application/atom+xml";
+                    Entry.Links.Add(AtomLink);
+
+                    var HtmlLink = new SyndicationLink();
+                    HtmlLink.RelationshipType = "self";
+                    HtmlLink.Uri = new Uri("http://surreyhillsdc.azurewebsites.net/" + i.Title.ToLower().Replace(" a ", " ").Replace(" the ", " ").Replace(" ", "-"));
+                    HtmlLink.MediaType = "text/html";
+                    Entry.Links.Add(HtmlLink);
 
                     ServiceItemList.Add(Entry);
                 });
