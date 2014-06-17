@@ -44,6 +44,12 @@ namespace OpenGovApi.Controllers
             SelfLink.MediaType = "application/atom+xml";
             ServiceFeed.Links.Add(SelfLink);
 
+            var HtmlLink = new SyndicationLink();
+            HtmlLink.RelationshipType = "self";
+            HtmlLink.Uri = new Uri("http://surreyhillsdc.azurewebsites.net/");
+            HtmlLink.MediaType = "text/html";
+            ServiceFeed.Links.Add(HtmlLink);
+
             return Ok(ServiceFeed.GetAtom10Formatter());
         }
 
