@@ -481,18 +481,6 @@
             </summary>
             <param name="documentPath">The physical path to XML document.</param>
         </member>
-        <member name="T:OpenGovApi.Controllers.PersonController">
-            <summary>
-            Person controller
-            </summary>
-        </member>
-        <member name="M:OpenGovApi.Controllers.PersonController.DeletePerson(System.String)">
-            <summary>
-            Remove a person record
-            </summary>
-            <param name="id">Person ID</param>
-            <returns></returns>
-        </member>
         <member name="M:OpenGovApi.Controllers.ServicesController.GetServices">
             <summary>
             An Atom feed listing services the organisation offers.
